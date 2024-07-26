@@ -8,11 +8,17 @@ import { UseCase } from "../base/use-case.base";
 })
 export class CreateTransactionUseCase implements UseCase<Transaction, boolean> {
 
+    minimumAmount: number = 20
+
     constructor(
         private _transactionRepository: ITransactionRepository
     ) { }
 
     public execute(transaction: Transaction): boolean {
+
+        if (transaction.totalAmount <= this.minimumAmount) {
+            throw new Error(`El monto minimo es de ${this.minimumAmount} dolares`);
+        }
 
         const result = this._transactionRepository.createTransaction(transaction)
 

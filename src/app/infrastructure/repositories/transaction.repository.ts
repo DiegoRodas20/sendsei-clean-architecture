@@ -5,14 +5,28 @@ import { ITransactionRepository } from "../../domain/transactions/transaction.re
 @Injectable()
 export class TransactionRepository implements ITransactionRepository {
 
+    private localStorageKey: string = 'transactions';
+
     constructor() { }
 
     public createTransaction(transaction: Transaction): boolean {
-        throw new Error("Method not implemented.");
+        try {
+            const transactions = this.getTransactions();
+            transactions.push(transaction);
+            localStorage.setItem(this.localStorageKey, JSON.stringify(transactions));
+            return true;
+        } catch (error) {
+            console.error('Error creating transaction:', error);
+            return false;
+        }
     }
 
     public getTransactions(): Transaction[] {
-        throw new Error("Method not implemented.");
+        const transactionsJson = localStorage.getItem(this.localStorageKey);
+        if (transactionsJson) {
+            return JSON.parse(transactionsJson);
+        }
+        return [];
     }
 
 }

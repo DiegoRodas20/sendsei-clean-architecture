@@ -8,11 +8,17 @@ import { UseCase } from "../base/use-case.base";
 })
 export class AddContactUseCase implements UseCase<Contact, boolean> {
 
+    minimumAge : number = 18
+
     constructor(
         private _contactRepository: IContactRepository
     ) { }
 
     public execute(contact: Contact): boolean {
+
+        if (contact.age <= this.minimumAge) {
+            throw new Error(`La edad minima es de ${this.minimumAge} años`);
+        }
 
         const result = this._contactRepository.addContact(contact)
 
